@@ -16,7 +16,15 @@ int main()
 
 	const auto client = mem.GetModuleAddress("client.dll");
 
-	std::cout << std::hex << client << std::dec << std::endl;
+	if(!client)
+	{
+		std::cout << "Failed to get client.dll" << std::endl;
+		return 1;
+	}
+	else
+	{
+		std::cout << "Loaded client.dll at: " << std::hex << client << std::dec << std::endl;
+	}
 
 	while (true)
 	{
