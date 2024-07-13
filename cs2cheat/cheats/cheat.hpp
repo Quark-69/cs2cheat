@@ -10,32 +10,37 @@
 extern bool triggerBhop;
 extern bool triggerAimbot;
 extern bool aimOnTeam;
+extern bool done;
+extern float aimbotFOV;
+
+extern Vector2 ScreenSize;
+extern Vector2 ScreenCentre;
 
 
 namespace offsets
 {
-	constexpr auto localPlayerPawn = 0x1823A08;
-	constexpr auto flags = 0x3CC;
-	constexpr auto forceJump = 0x181C670;
 
-	constexpr auto dwEntityList = 0x19BDD78;
-	constexpr auto dwViewMatrix = 0x1A1FCD0;
-	constexpr auto m_hPawn = 0x5FC;
-	constexpr auto m_iHealth = 0x324;
-	constexpr auto m_iTeamNum = 0x3C3;
-	constexpr auto m_vOldOrigin = 0x1274;
+	//cheatengine
+	constexpr std::ptrdiff_t forceJump = 0x181C670;
 
-	constexpr auto m_entitySpottedState = 0x2288;
+	//offsets.hpp
+	constexpr std::ptrdiff_t dwEntityList = 0x19BDD58;
+	constexpr std::ptrdiff_t dwViewMatrix = 0x1A1FCB0;
+	constexpr std::ptrdiff_t dwLocalPlayerPawn = 0x1823A08;
+	constexpr std::ptrdiff_t dwViewAngles = 0x1A2D228;
 
-	constexpr auto m_vecViewOffset = 0xC50;
-
-	constexpr std::ptrdiff_t m_hPlayerPawn = 0x7DC;
-
-	constexpr std::ptrdiff_t dwViewAngles = 0x1A2D248;
-
-	constexpr std::ptrdiff_t m_bSpottedByMask = 0xC;
-
+	//client.dll.hpp
+	constexpr std::ptrdiff_t flags = 0x3CC;
+	constexpr std::ptrdiff_t m_iHealth = 0x324;
+	constexpr std::ptrdiff_t m_hPawn = 0x5FC;
+	constexpr std::ptrdiff_t m_iTeamNum = 0x3C3;
+	constexpr std::ptrdiff_t m_vOldOrigin = 0x1274;
 	constexpr std::ptrdiff_t m_bSpotted = 0x8;
+	constexpr std::ptrdiff_t m_entitySpottedState = 0x2288;
+	constexpr std::ptrdiff_t m_vecViewOffset = 0xC50;
+	constexpr std::ptrdiff_t m_hPlayerPawn = 0x7DC;
+	constexpr std::ptrdiff_t m_modelState = 0x170;
+	constexpr std::ptrdiff_t m_pGameSceneNode = 0x308;
 }
 
 class Cheat
@@ -44,6 +49,9 @@ class Cheat
 private:
 	Memory mem;
 	std::uintptr_t client = 0;
+
+	static constexpr uint32_t PLUS_JUMP = 65537;
+	static constexpr uint32_t MINUS_JUMP = 256;
 
 public:
 	Cheat(const std::string& processName)
@@ -62,7 +70,7 @@ public:
 
 	void Log() const
 	{
-		std::cout << "Client at: " << std::hex << client <<  std::dec << std::endl;
+		std::cout << "Client address: " << std::hex << client <<  std::dec << std::endl;
 	}
 
 };
