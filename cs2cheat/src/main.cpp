@@ -14,8 +14,7 @@ bool triggerBhop = true;
 bool triggerAimbot = true;
 bool aimOnTeam = false;
 bool done = false;
-
-float aimbotFOV = 150.0f;
+bool recoilControl = true;
 
 
 Vector2 ScreenSize = Vector2(GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN));
@@ -136,7 +135,7 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE, PSTR, int cmdshow)
 
     WNDCLASSEXW wc = { sizeof(wc), CS_HREDRAW | CS_VREDRAW, WndProc, 0L, 0L, hInst, nullptr, nullptr, nullptr, nullptr, L"ImGui Class", nullptr };
     ::RegisterClassExW(&wc);
-    HWND hwnd = ::CreateWindowExW(NULL, wc.lpszClassName, L"Cheat App", WS_OVERLAPPEDWINDOW, 0, 0, 500, 500, nullptr, nullptr, wc.hInstance, nullptr);
+    HWND hwnd = ::CreateWindowExW(WS_EX_TRANSPARENT | WS_EX_TOPMOST, wc.lpszClassName, L"Cheat App", WS_OVERLAPPEDWINDOW, 0, 0, 300, 300, nullptr, nullptr, wc.hInstance, nullptr);
 
 
     if (!CreateDeviceD3D(hwnd))
@@ -196,6 +195,7 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE, PSTR, int cmdshow)
             ImGui::Begin("Cheat Menu");
             ImGui::Checkbox("Bhop", &triggerBhop);
             ImGui::Checkbox("Aimbot", &triggerAimbot);
+            ImGui::Checkbox("Recoil Control", &recoilControl);
 
             ImGui::End();
         }

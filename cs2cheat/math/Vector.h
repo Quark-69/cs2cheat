@@ -62,6 +62,8 @@ class Vector2
 	static const Vector2& WorldToScreen(ViewMatrix& viewMatrix, const Vector& pos, int width, int height);
 
 	float distance(const Vector2& vec) const;
+
+	const Vector2& operator*(const float factor) const;
 };
 
 

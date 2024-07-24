@@ -58,3 +58,8 @@ float Vector2::distance(const Vector2& vec) const
 {
 	return (float)sqrt(pow(x - vec.x, 2) + pow(y - vec.y, 2));
 }
+
+const Vector2& Vector2::operator*(const float factor) const
+{
+	return { x * factor, y * factor};
+}

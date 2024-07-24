@@ -118,9 +118,52 @@ void Cheat::Aimbot()
 		mem.Write<Vector>(client + offsets::dwViewAngles, relativeAngle);
 	}
 
+}
 
-	std::this_thread::sleep_for(std::chrono::milliseconds(10));
+void Cheat::RecoilControl()
+{
+	const auto localPlayerPawn = mem.Read<std::uintptr_t>(client + offsets::dwLocalPlayerPawn);
+	const auto shotsFired = mem.Read<int>(localPlayerPawn + offsets::m_iShotsFired);
 
+	if (shotsFired)
+	{
+		const auto viewAngles = mem.Read<Vector2>(client + offsets::dwViewAngles);
+
+		const auto aimPunch = mem.Read<Vector2>(localPlayerPawn + offsets::m_aimPunchAngle);
+
+		auto newAngles = Vector2(
+			viewAngles.x + oldAimPunch.x - aimPunch.x * 2.0f,
+			viewAngles.y + oldAimPunch.y - aimPunch.y * 2.0f
+		
+		);
+
+		if(newAngles.x > 89.0f)
+		{
+			newAngles.x = 89.0f;
+		}
+		else if(newAngles.x < -89.0f)
+		{
+			newAngles.x = -89.0f;
+		}
+
+		while(newAngles.y > 180.0f)
+		{
+			newAngles.y -= 360.0f;
+		}
+
+		while(newAngles.y < -180.0f)
+		{
+			newAngles.y += 360.0f;
+		}
+
+		mem.Write<Vector2>(client + offsets::dwViewAngles, newAngles);
+
+		oldAimPunch = aimPunch * 2.f;
+	}
+	else
+	{
+		oldAimPunch.x = oldAimPunch.y = 0.f;
+	}
 }
 
 void Cheat::Run()
@@ -143,6 +186,18 @@ void Cheat::Run()
 			if (triggerAimbot)
 			{
 				Aimbot();
+				std::this_thread::sleep_for(std::chrono::milliseconds(10));
+			}
+		}
+	});
+
+	std::thread recoilThread([this]() {
+		while (!done)
+		{
+			if (recoilControl)
+			{
+				RecoilControl();
+				std::this_thread::sleep_for(std::chrono::milliseconds(10));
 			}
 		}
 	});
@@ -150,4 +205,5 @@ void Cheat::Run()
 
 	bhopThread.join();
 	aimbotThread.join();
+	recoilThread.join();
 }
